@@ -1,4 +1,7 @@
 MONGO_URL = 'mongodb://localhost:27017'
+MONGO_DB = "abusech"
+MONGO_COLLECTION = "ransomwareInfo"
+
 """
 For authenticated mongo, use:
 MONGO_URL = 'mongodb://userName:passWord@localhost:27017'
