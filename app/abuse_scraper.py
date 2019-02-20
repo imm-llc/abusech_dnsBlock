@@ -39,18 +39,18 @@ for row in ransom_list:
             status = row[5]
             registrar = row[6]
             IP = row[7]
-            # Mongo won't let you have a key with dots in it
-            keyHost = str(host).replace(".", "_")
             ASN = row[8]
             country = row[9]
             if IP == "":
                 IP = "null"
             if url == "":
                 url = "null"
-            json_record = { keyHost: {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
-                "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}}
+            if host == "":
+                host = "null"
+            json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
+                "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
             print(json.dumps(json_record))
-            mongo_handler.loader(json_record)
+            mongo_handler.loader(json.dumps(json_record))
             sleep(1)
             """
             if mongo_handler.loader(json_record):
