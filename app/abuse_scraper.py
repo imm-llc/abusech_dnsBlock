@@ -41,17 +41,21 @@ for row in ransom_list:
             IP = row[7]
             ASN = row[8]
             country = row[9]
-            if IP == "":
-                IP = "null"
-            if url == "":
-                url = "null"
-            if host == "":
-                host = "null"
-            json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
-                "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
-            print(json.dumps(json_record))
-            mongo_handler.loader(json.dumps(json_record))
-            sleep(1)
+            if status == "offline":
+                pass
+            else:
+            
+                if IP == "":
+                    IP = "null"
+                if url == "":
+                    url = "null"
+                if host == "":
+                    host = "null"
+                json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
+                    "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
+                print(json.dumps(json_record))
+                mongo_handler.loader(json.dumps(json_record))
+                sleep(1)
             """
             if mongo_handler.loader(json_record):
                 logger.info("Successful response from Mongo Handler")
