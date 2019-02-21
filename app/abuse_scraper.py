@@ -23,6 +23,8 @@ except Exception as e:
 
 json_record = {}
 
+record_count = 0
+
 for row in ransom_list:
     if len(row) < 2:
         pass
@@ -53,12 +55,14 @@ for row in ransom_list:
                     host = "null"
                 json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
                     "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
-                print(json.dumps(json_record))
+                
+                record_count += 1
                 mongo_handler.loader(json.dumps(json_record))
-                sleep(1)
+                
             """
             if mongo_handler.loader(json_record):
                 logger.info("Successful response from Mongo Handler")
             else:
                 logger.error("Failure response from Mongo Handler")
             """
+logger.info("Inserted {} records".format(str(record_count)))
