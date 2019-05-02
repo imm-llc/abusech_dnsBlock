@@ -49,32 +49,43 @@ for row in ransom_list:
             if status == "offline":
                 pass
             else:
-                if IP == "":
-                    IP = None
-                if url == "":
-                    url = None
-                if host == "":
-                    host = None
-                json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
-                    "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
-                
-                # This msg is for pretty output when printing to console
-                msg = """
-                Threat: {}
-                Malware: {}
-                Host: {}
-                Status: {}
-                IP: {}
-                Country: {}
-                URL: {}
-                """.format(str(threat), str(malware), str(host), str(status), str(IP), str(country), str(url))
+                # If there isn't an IP, we can't do anything
+                if IP = "":
+                    pass
 
-                if str(IP) == "77.104.162.229":
-                    logger.info("Found clown")
-                
-                # We're receiving a boolean depending on fail or success
-                if not watchguard_handler.add_alias_member(IP):
-                    logger.error("Received failure from WatchGuard Handler")
                 else:
-                    logger.info("Received success from WatchGuard Handler")
-                    mongo_handler.insert_malicious_record(json.dumps(json_record))
+
+                    if url == "":
+                        url = None
+                    if host == "":
+                        host = None
+                    json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
+                        "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
+                    
+                    # This msg is for pretty output when printing to console
+                    
+                    msg = """
+                    Threat: {}
+                    Malware: {}
+                    Host: {}
+                    Status: {}
+                    IP: {}
+                    Country: {}
+                    URL: {}
+                    """.format(str(threat), str(malware), str(host), str(status), str(IP), str(country), str(url))
+
+                    # Check if we already have this IP in our database, which means we have it blocked
+                    if not mongo_handler.check_existing_record(IP):
+                        
+                        # We're receiving a boolean depending on fail or success
+                        if not watchguard_handler.add_alias_member(IP):
+                            logger.error("Received failure from WatchGuard Handler")
+                            
+                        else:
+                            logger.info("Received success from WatchGuard Handler")
+                            json_record['IpBlocked'] = True
+                            mongo_handler.insert_malicious_record(json.dumps(json_record))
+
+                    else:
+
+                        pass

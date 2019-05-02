@@ -17,5 +17,15 @@ def insert_malicious_record(json_record):
         logger.error("Error inserting record into mongo: {}".format(str(e)))
         return False
 
+def check_existing_record(IP):
+
+    query = db[MONGO_COLLECTION].find_one({
+        "IP": IP
+    })
+
+    if query is None:
+        return False
+    else:
+        return True
 
 
