@@ -8,6 +8,11 @@ from time import sleep
 
 from app_logger import logger
 
+"""
+General idea of command sequence
+Connect over SSH > configure > policy > alias MaliciousIP host-ip 83.217.11.193 > apply
+"""
+
 
 # Set up SSH client
 client = client.SSHClient()
@@ -50,8 +55,9 @@ def add_alias_member(ip_address):
     # Add the IP to our alias containing blocked IPs
     shell.send("alias {} host-ip {} \n".format(WATCHGUARD_ALIAS, ip_address))
     sleep(2)
+    # This response is a bytes-object
     response = shell.recv(2024)
-    logger.info(f"Response from WatchGuard\n: {response}")
+    logger.info(f"Response from WatchGuard\n: {str(response)}")
 
     # Exit policy mode
     shell.send("exit\n")
@@ -72,8 +78,3 @@ def add_alias_member(ip_address):
     client.close()
 
     logger.info("Closed connection to WatchGuard")
-
-"""
-General idea of command sequence
-Connect over SSH > configure > policy > alias MaliciousIP host-ip 83.217.11.193 > apply
-"""
