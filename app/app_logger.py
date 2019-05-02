@@ -1,5 +1,5 @@
 import logging
-from config import *
+from config import LOG_FILE, LOG_MODE
 
 if LOG_MODE == "dev":
     logger = logging.getLogger('AbuseScraper')

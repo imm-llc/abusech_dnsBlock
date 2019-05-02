@@ -1,6 +1,6 @@
 import requests, csv, json, mongo_handler
 from config import *
-from app_logger import *
+from app_logger import logger
 from sys import exit
 from time import sleep
 
@@ -14,8 +14,8 @@ else:
 
 
 # Firstseen (UTC),Threat,Malware,Host,URL,Status,Registrar,IP address(es),ASN(s),Country
-#ransom_csv = csv.reader(abuse_csv_response.text.read().decode('ascii')) 
 ransom_csv = csv.reader(abuse_csv_response.text.splitlines(), delimiter=',')
+
 try:
     ransom_list = list(ransom_csv)
 except Exception as e:
@@ -55,9 +55,21 @@ for row in ransom_list:
                     host = "null"
                 json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
                     "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
-                
+                msg = """
+                Threat: {}
+                Malware: {}
+                Host: {}
+                Status: {}
+                IP: {}
+                Country: {}
+                URL: {}
+                """.format(str(threat), str(malware), str(host), str(status), str(IP), str(country), str(url))
+                if str(IP) == "77.104.162.229":
+                    print("Found clown")
+                #print(msg)
                 record_count += 1
-                mongo_handler.loader(json.dumps(json_record))
+                
+                #mongo_handler.loader(json.dumps(json_record))
                 
             """
             if mongo_handler.loader(json_record):
@@ -65,4 +77,4 @@ for row in ransom_list:
             else:
                 logger.error("Failure response from Mongo Handler")
             """
-logger.info("Inserted {} records".format(str(record_count)))
+#logger.info("Inserted {} records".format(str(record_count)))
