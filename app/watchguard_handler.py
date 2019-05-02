@@ -78,3 +78,5 @@ def add_alias_member(ip_address):
     client.close()
 
     logger.info("Closed connection to WatchGuard")
+
+    return True
