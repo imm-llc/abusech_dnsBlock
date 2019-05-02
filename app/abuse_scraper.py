@@ -1,8 +1,9 @@
 import requests, csv, json, mongo_handler
-from config import *
+from config import RANSOMWARE_TRACKER_URL
 from app_logger import logger
 from sys import exit
 from time import sleep
+import watchguard_handler
 
 abuse_csv_response = requests.get(RANSOMWARE_TRACKER_URL)
 
@@ -16,6 +17,7 @@ else:
 # Firstseen (UTC),Threat,Malware,Host,URL,Status,Registrar,IP address(es),ASN(s),Country
 ransom_csv = csv.reader(abuse_csv_response.text.splitlines(), delimiter=',')
 
+# Try to turn this CSV into a list
 try:
     ransom_list = list(ransom_csv)
 except Exception as e:
@@ -43,18 +45,20 @@ for row in ransom_list:
             IP = row[7]
             ASN = row[8]
             country = row[9]
+            # If this isn't an active threat, we can skip it
             if status == "offline":
                 pass
             else:
-            
                 if IP == "":
-                    IP = "null"
+                    IP = None
                 if url == "":
-                    url = "null"
+                    url = None
                 if host == "":
-                    host = "null"
+                    host = None
                 json_record = {"Threat": threat, "Malware": malware, "Host": host, "URL": url, "Status": status, \
                     "Registrar": registrar, "IP": IP, "ASN": ASN, "Country": country, "FirstSeen": firstSeen}
+                
+                # This msg is for pretty output when printing to console
                 msg = """
                 Threat: {}
                 Malware: {}
@@ -64,17 +68,13 @@ for row in ransom_list:
                 Country: {}
                 URL: {}
                 """.format(str(threat), str(malware), str(host), str(status), str(IP), str(country), str(url))
+
                 if str(IP) == "77.104.162.229":
-                    print("Found clown")
-                #print(msg)
-                record_count += 1
+                    logger.info("Found clown")
                 
-                #mongo_handler.loader(json.dumps(json_record))
-                
-            """
-            if mongo_handler.loader(json_record):
-                logger.info("Successful response from Mongo Handler")
-            else:
-                logger.error("Failure response from Mongo Handler")
-            """
-#logger.info("Inserted {} records".format(str(record_count)))
+                # We're receiving a boolean depending on fail or success
+                if not watchguard_handler.add_alias_member(IP):
+                    logger.error("Received failure from WatchGuard Handler")
+                else:
+                    logger.info("Received success from WatchGuard Handler")
+                    mongo_handler.insert_malicious_record(json.dumps(json_record))
