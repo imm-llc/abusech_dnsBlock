@@ -54,7 +54,8 @@ for row in ransom_list:
                     pass
 
                 else:
-
+                    # Give the WatchGuard a break
+                    sleep(3)
                     if url == "":
                         url = None
                     if host == "":
