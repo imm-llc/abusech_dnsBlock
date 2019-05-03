@@ -1,6 +1,6 @@
 MONGO_URL = 'mongodb://localhost:27017'
 MONGO_DB = "abusech"
-MONGO_COLLECTION = "ransomwareInfo"
+MONGO_COLLECTION = "ransomwareBlock"
 
 """
 For authenticated mongo, use:
@@ -21,3 +21,12 @@ RANSOMWARE_TRACKER_URL = "https://ransomwaretracker.abuse.ch/feeds/csv/"
 # prod will log to file
 LOG_MODE = "dev"
 LOG_FILE = "/path/to/logfile"
+
+
+WATCHGUARD_USER = ""
+WATCHGUARD_PASSWORD = ""
+# 4118 is the default WatchGuard SSH port
+WATCHGUARD_PORT = 4118
+WATCHGUARD_IP = "10.0.0.1"
+# The alias to add IP addresses to
+WATCHGUARD_ALIAS = "MaliciousIP"
