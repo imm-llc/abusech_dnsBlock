@@ -6,6 +6,8 @@ The idea is that you'll have an up-to-date IP blacklist to prevent communication
 
 I wrote this to be as simple as I could while working around edge cases I've encountered.
 
+Originally, I intended to use a DNS-based block, but that made less sense than IP. Hence the misleading repo name
+
 ## Setup
 
 Install Python36 and pip3. Install the packages listed in `Pipfile`.
