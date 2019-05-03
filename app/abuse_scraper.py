@@ -87,5 +87,5 @@ for row in ransom_list:
                             mongo_handler.insert_malicious_record(json.dumps(json_record))
 
                     else:
-
+                        logger.info(f"Record for {IP} already exists")
                         pass
