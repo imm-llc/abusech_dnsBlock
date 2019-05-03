@@ -50,7 +50,7 @@ for row in ransom_list:
                 pass
             else:
                 # If there isn't an IP, we can't do anything
-                if IP = "":
+                if IP == "":
                     pass
 
                 else:
@@ -80,7 +80,7 @@ for row in ransom_list:
                         # We're receiving a boolean depending on fail or success
                         if not watchguard_handler.add_alias_member(IP):
                             logger.error("Received failure from WatchGuard Handler")
-                            
+
                         else:
                             logger.info("Received success from WatchGuard Handler")
                             json_record['IpBlocked'] = True
