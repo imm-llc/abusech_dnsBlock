@@ -52,6 +52,9 @@ for row in ransom_list:
                 # If there isn't an IP, we can't do anything
                 if IP == "":
                     pass
+                # Not sure if this would break something in the WatchGuard
+                elif IP == "127.0.0.1":
+                    pass
 
                 else:
                     # Give the WatchGuard a break
